@@ -1,0 +1,33 @@
+Summary: Discete simulation clock prototype
+Name: @name@
+Version: @version@
+Release: @release@
+License: MIT
+Source0: %{name}-%{version}.tar.gz
+BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
+
+%description
+Discete simulation clock prototype that can be used for developing a discrete
+timing schema in a simulation process.
+
+%prep
+%setup -q
+
+%build
+%{__make}
+
+%install
+rm -rf $RPM_BUILD_ROOT
+%{makeinstall}
+
+%clean
+rm -rf $RPM_BUILD_ROOT
+
+
+%files
+%defattr(-,root,root,-)
+%{_bindir}/*
+%doc
+
+
+%changelog
