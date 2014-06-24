@@ -32,6 +32,18 @@ SimulationClock::SimulationClock()
 {
 }
 
+SimulationClock::SimulationClock(SimulationClock const& self)
+{
+  (*this) = self;
+}
+
+SimulationClock&
+SimulationClock::operator=(SimulationClock const& self)
+{
+  (*this).current_time = self.current_time;
+  return (*this);
+}
+
 SimulationClock::time_point
 SimulationClock::now() const noexcept
 {

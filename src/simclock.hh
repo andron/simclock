@@ -46,6 +46,8 @@ class SimulationClock
   static constexpr bool const is_system = false;
 
   SimulationClock();
+  SimulationClock(SimulationClock const&);
+  SimulationClock& operator=(SimulationClock const&);
 
   time_point now() const   noexcept;
   void       next()        noexcept;
@@ -81,9 +83,6 @@ class SimulationClock
 
   clock_storage current_time;
   time_point const epoch = time_point();
-
-  SimulationClock(SimulationClock const&) = delete;
-  SimulationClock& operator=(SimulationClock const&) = delete;
 
   // Struct that carries the datatype we want to use for specialization. It is
   // required in the generic case as well, as can be seen in the two methods
