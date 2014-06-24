@@ -38,11 +38,13 @@ main(int ac, char** av)
   std::cout.setf(std::ios_base::fixed, std::ios_base::floatfield);
   std::cout.precision(4);
 
+  SimulationClock clock;
+
   for (int i=0; i<frames; ++i)
   {
-    SimulationClock::next();
+    clock.next();
 
-    auto simtime = SimulationClock::now();
+    auto simtime = clock.now();
 
     // Convert to other formats using the fetched time.
     auto us      = SimulationClock::as<std::chrono::microseconds>(simtime);
@@ -50,11 +52,11 @@ main(int ac, char** av)
     double dsec  = SimulationClock::as<double>(simtime);
 
     // Or just get the time as anything.
-    double dsec2 = SimulationClock::as<double>();
+    double dsec2 = SimulationClock::as<double>(clock);
 
-    std::cout << std::setw(9) << simtime << " : "
-              << std::setw(9) << us.count() << " : "
-              << std::setw(9) << ns.count() << " : "
+    std::cout << std::setw(10) << simtime << " : "
+              << std::setw(10) << us.count() << " : "
+              << std::setw(10) << ns.count() << " : "
               << dsec << " : "
               << dsec2 << std::endl;
   }

@@ -29,11 +29,12 @@
 
 class SimulationClock
 {
- public:
+  // Definition of time - Type for holding amount of time to represent
+  // and the resolution of the clock.
+  typedef int64_t clock_storage;
+  typedef std::chrono::duration<clock_storage, std::ratio<1,64>> simulation_duration;
 
-  // Definition of time - Type for holding amount of time to represent and
-  // then the resolution of the clock.
-  typedef std::chrono::duration<int64_t, std::ratio<1,64>> simulation_duration;
+ public:
 
   typedef simulation_duration                            duration;
   typedef duration::period                               period;
@@ -44,17 +45,19 @@ class SimulationClock
   static constexpr bool const is_steady = false;
   static constexpr bool const is_system = false;
 
-  static time_point now()         noexcept;
-  static void       next()        noexcept;
-  static void       step(int32_t) noexcept;
-  static void       step(int64_t) noexcept;
+  SimulationClock();
 
-  static duration   seconds(int32_t)      noexcept;
-  static duration   milliseconds(int32_t) noexcept;
-  static duration   microseconds(int32_t) noexcept;
+  time_point now() const   noexcept;
+  void       next()        noexcept;
+  void       step(int32_t) noexcept;
+  void       step(int64_t) noexcept;
+
+  duration   seconds(int32_t)      const noexcept;
+  duration   milliseconds(int32_t) const noexcept;
+  duration   microseconds(int32_t) const noexcept;
 
   template<typename TimeType>
-  static void step(TimeType ts) noexcept
+  void step(TimeType ts) noexcept
   {
     current_time += std::chrono::duration_cast<duration>(ts).count();
   }
@@ -66,9 +69,9 @@ class SimulationClock
   }
 
   template<typename TimeType>
-  static TimeType as() noexcept
+  static TimeType as(SimulationClock const& clock) noexcept
   {
-    return as(now(), Specialize<TimeType>());
+    return as(clock.now(), Specialize<TimeType>());
   }
 
   friend time_point operator+(time_point, double);
@@ -76,10 +79,9 @@ class SimulationClock
 
  private:
 
-  static int64_t current_time;
-  static constexpr time_point const epoch = time_point();
+  clock_storage current_time;
+  time_point const epoch = time_point();
 
-  SimulationClock() = delete;
   SimulationClock(SimulationClock const&) = delete;
   SimulationClock& operator=(SimulationClock const&) = delete;
 

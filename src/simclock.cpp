@@ -26,10 +26,14 @@
 #include <iostream>
 #include <iomanip>
 
-int64_t SimulationClock::current_time = 0;
+
+SimulationClock::SimulationClock()
+    : current_time(0)
+{
+}
 
 SimulationClock::time_point
-SimulationClock::now() noexcept
+SimulationClock::now() const noexcept
 {
   return time_point(duration(current_time));
 }
@@ -53,21 +57,21 @@ SimulationClock::step(int64_t ts) noexcept
 }
 
 SimulationClock::duration
-SimulationClock::seconds(int32_t t) noexcept
+SimulationClock::seconds(int32_t t) const noexcept
 {
   return std::chrono::duration_cast<SimulationClock::duration>
       (std::chrono::seconds(t));
 }
 
 SimulationClock::duration
-SimulationClock::milliseconds(int32_t t) noexcept
+SimulationClock::milliseconds(int32_t t) const noexcept
 {
   return std::chrono::duration_cast<SimulationClock::duration>
       (std::chrono::milliseconds(t));
 }
 
 SimulationClock::duration
-SimulationClock::microseconds(int32_t t) noexcept
+SimulationClock::microseconds(int32_t t) const noexcept
 {
   return std::chrono::duration_cast<SimulationClock::duration>
       (std::chrono::microseconds(t));
