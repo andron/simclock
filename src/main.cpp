@@ -21,7 +21,7 @@
   CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#include "simclock.hh"
+#include "simclock.h"
 
 #include <iomanip>
 #include <iostream>
