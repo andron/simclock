@@ -28,20 +28,19 @@
 #include <chrono>
 #include <iostream>
 
-class SimulationClock
-{
+class SimulationClock {
   // Definition of time - Type for holding amount of time to represent
   // and the resolution of the clock.
   typedef int64_t clock_storage;
-  typedef std::chrono::duration<clock_storage, std::ratio<1,64>> simulation_duration;
+  typedef std::chrono::duration<
+    clock_storage, std::ratio<1, 64>> simulation_duration;
 
  public:
-
-  typedef simulation_duration                            duration;
-  typedef duration::period                               period;
-  typedef duration::rep                                  rep;
-  typedef std::chrono::time_point<SimulationClock>       time_point;
-  typedef std::chrono::duration<double, std::ratio<1,1>> dseconds;
+  typedef simulation_duration                             duration;
+  typedef duration::period                                period;
+  typedef duration::rep                                   rep;
+  typedef std::chrono::time_point<SimulationClock>        time_point;
+  typedef std::chrono::duration<double, std::ratio<1, 1>> dseconds;
 
   static constexpr bool const is_steady = false;
   static constexpr bool const is_system = false;
@@ -50,31 +49,28 @@ class SimulationClock
   SimulationClock(SimulationClock const&);
   SimulationClock& operator=(SimulationClock const&);
 
-  time_point now() const   noexcept;
-  void       next()        noexcept;
-  void       step(double)  noexcept;
-  void       step(int32_t) noexcept;
-  void       step(int64_t) noexcept;
+  time_point now() const             noexcept;
+  void       next()                  noexcept;
+  void       step(double time_step)  noexcept;
+  void       step(int32_t time_step) noexcept;
+  void       step(int64_t time_step) noexcept;
 
   duration   seconds(int32_t)      const noexcept;
   duration   milliseconds(int32_t) const noexcept;
   duration   microseconds(int32_t) const noexcept;
 
   template<typename TimeType>
-  void step(TimeType ts) noexcept
-  {
+  void step(TimeType ts) noexcept {
     current_time += std::chrono::duration_cast<duration>(ts).count();
   }
 
   template<typename TimeType>
-  static TimeType as(time_point tp) noexcept
-  {
+  static TimeType as(time_point tp) noexcept {
     return as(tp, Specialize<TimeType>());
   }
 
   template<typename TimeType>
-  static TimeType as(SimulationClock const& clock) noexcept
-  {
+  static TimeType as(SimulationClock const& clock) noexcept {
     return as(clock.now(), Specialize<TimeType>());
   }
 
@@ -82,7 +78,6 @@ class SimulationClock
   friend std::ostream& operator<<(std::ostream&, time_point);
 
  private:
-
   std::atomic<int64_t> current_time;
   time_point const epoch = time_point();
 
@@ -92,15 +87,13 @@ class SimulationClock
   template<typename T> struct Specialize { typedef T type; };
 
   template<typename TimeType>
-  static TimeType as(time_point t, Specialize<TimeType>)
-  {
+  static TimeType as(time_point t, Specialize<TimeType>) {
     return std::chrono::duration_cast<TimeType>(t.time_since_epoch());
   }
 
-  static double as(time_point t, Specialize<double>)
-  {
+  static double as(time_point t, Specialize<double>) {
     return std::chrono::duration_cast<dseconds>(t.time_since_epoch()).count();
   }
 };
 
-#endif // __simclock_hh__
+#endif  // __simclock_hh__

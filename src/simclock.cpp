@@ -28,79 +28,68 @@
 
 
 SimulationClock::SimulationClock()
-    : current_time(0)
-{
+    : current_time(0) {
 }
 
-SimulationClock::SimulationClock(SimulationClock const& self)
-{
+SimulationClock::SimulationClock(SimulationClock const& self) {
   (*this) = self;
 }
 
 SimulationClock&
-SimulationClock::operator=(SimulationClock const& self)
-{
+SimulationClock::operator=(SimulationClock const& self) {
   (*this).current_time.store(self.current_time.load());
   return (*this);
 }
 
 SimulationClock::time_point
-SimulationClock::now() const noexcept
-{
+SimulationClock::now() const noexcept {
   return time_point(duration(current_time));
 }
 
 void
-SimulationClock::next() noexcept
-{
+SimulationClock::next() noexcept {
   step(1);
 }
 
 void
-SimulationClock::step(double ts) noexcept
-{
+SimulationClock::step(double ts) noexcept {
   // Make a duration using double as storage out of ts. Then use
   // duration cast to cast to a "normal" duration and step that amount.
   dseconds dduration(ts);
-  step(std::chrono::duration_cast<SimulationClock::duration>(dduration).count());
+  step(std::chrono::duration_cast<
+       SimulationClock::duration>(dduration).count());
 }
 
 void
-SimulationClock::step(int32_t ts) noexcept
-{
+SimulationClock::step(int32_t ts) noexcept {
   current_time.fetch_add(ts);
 }
 
 void
-SimulationClock::step(int64_t ts) noexcept
-{
+SimulationClock::step(int64_t ts) noexcept {
   current_time.fetch_add(ts);
 }
 
 SimulationClock::duration
-SimulationClock::seconds(int32_t t) const noexcept
-{
+SimulationClock::seconds(int32_t t) const noexcept {
   return std::chrono::duration_cast<SimulationClock::duration>
       (std::chrono::seconds(t));
 }
 
 SimulationClock::duration
-SimulationClock::milliseconds(int32_t t) const noexcept
-{
+SimulationClock::milliseconds(int32_t t) const noexcept {
   return std::chrono::duration_cast<SimulationClock::duration>
       (std::chrono::milliseconds(t));
 }
 
 SimulationClock::duration
-SimulationClock::microseconds(int32_t t) const noexcept
-{
+SimulationClock::microseconds(int32_t t) const noexcept {
   return std::chrono::duration_cast<SimulationClock::duration>
       (std::chrono::microseconds(t));
 }
 
 std::ostream&
-operator<<(std::ostream& os, SimulationClock::time_point t)
-{
+operator<<(std::ostream& os, SimulationClock::time_point t) {
   int64_t frame = t.time_since_epoch().count();
   char fill = std::cout.fill();
   return os << "Sim(" << std::setfill('0') << std::setw(6)
@@ -108,8 +97,7 @@ operator<<(std::ostream& os, SimulationClock::time_point t)
 }
 
 SimulationClock::time_point
-operator+(SimulationClock::time_point tp, double sec)
-{
+operator+(SimulationClock::time_point tp, double sec) {
   if (sec <= 0.0) {
     return SimulationClock::time_point();
   } else {

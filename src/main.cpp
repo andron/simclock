@@ -27,8 +27,7 @@
 #include <iostream>
 
 int
-main(int ac, char** av)
-{
+main(int ac, char** av) {
   int frames = 0;
   if (ac > 1)
     frames = std::atoi(av[1]);
@@ -40,8 +39,7 @@ main(int ac, char** av)
 
   SimulationClock clock;
 
-  for (int i=0; i<frames; ++i)
-  {
+  for (int i = 0; i < frames; ++i) {
     clock.next();
 
     auto simtime = clock.now();
@@ -62,7 +60,7 @@ main(int ac, char** av)
   }
 
   std::cout << "step(double) method" << std::endl;
-  for (int i = 0; i<10; ++i) {
+  for (int i = 0; i < 10; ++i) {
     clock.step(0.107);
     auto us = SimulationClock::as<std::chrono::microseconds>(clock.now());
     std::cout << std::setw(10) << clock.now() << " : "
