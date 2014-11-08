@@ -60,5 +60,14 @@ main(int ac, char** av)
               << dsec << " : "
               << dsec2 << std::endl;
   }
+
+  std::cout << "step(double) method" << std::endl;
+  for (int i = 0; i<10; ++i) {
+    clock.step(0.107);
+    auto us = SimulationClock::as<std::chrono::microseconds>(clock.now());
+    std::cout << std::setw(10) << clock.now() << " : "
+              << std::setw(10) << us.count() << std::endl;
+  }
+
   return 0;
 }

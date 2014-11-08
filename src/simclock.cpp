@@ -40,7 +40,7 @@ SimulationClock::SimulationClock(SimulationClock const& self)
 SimulationClock&
 SimulationClock::operator=(SimulationClock const& self)
 {
-  (*this).current_time = self.current_time;
+  (*this).current_time.store(self.current_time.load());
   return (*this);
 }
 
@@ -57,15 +57,24 @@ SimulationClock::next() noexcept
 }
 
 void
+SimulationClock::step(double ts) noexcept
+{
+  // Make a duration using double as storage out of ts. Then use
+  // duration cast to cast to a "normal" duration and step that amount.
+  dseconds dduration(ts);
+  step(std::chrono::duration_cast<SimulationClock::duration>(dduration).count());
+}
+
+void
 SimulationClock::step(int32_t ts) noexcept
 {
-  current_time += ts;
+  current_time.fetch_add(ts);
 }
 
 void
 SimulationClock::step(int64_t ts) noexcept
 {
-  current_time += ts;
+  current_time.fetch_add(ts);
 }
 
 SimulationClock::duration

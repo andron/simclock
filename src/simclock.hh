@@ -24,6 +24,7 @@
 #ifndef __simclock_hh__
 #define __simclock_hh__
 
+#include <atomic>
 #include <chrono>
 #include <iostream>
 
@@ -51,6 +52,7 @@ class SimulationClock
 
   time_point now() const   noexcept;
   void       next()        noexcept;
+  void       step(double)  noexcept;
   void       step(int32_t) noexcept;
   void       step(int64_t) noexcept;
 
@@ -81,7 +83,7 @@ class SimulationClock
 
  private:
 
-  clock_storage current_time;
+  std::atomic<int64_t> current_time;
   time_point const epoch = time_point();
 
   // Struct that carries the datatype we want to use for specialization. It is
